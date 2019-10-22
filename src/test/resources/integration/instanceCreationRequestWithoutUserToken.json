@@ -1,0 +1,15 @@
+{
+  "service_id": "hls-service-id1",
+  "plan_id": "hls-plan-id1",
+  "context": {
+    "platform": "cloudfoundry",
+    "organization_guid": "test-org-guid",
+    "space_guid": "test-space-guid"
+  },
+  "organization_guid": "test-org-guid",
+  "space_guid": "test-space-guid",
+  "parameters": {},
+  "maintenance_info": {
+    "version": "2.1.1+abcdef"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "context": {
+    "platform": "cloudfoundry",
+    "organization_guid": "test-org-guid",
+    "space_guid": "test-space-guid"
+  },
+  "service_id": "hls-service-id1",
+  "plan_id": "hls-plan-id1",
+  "bind_resource": {
+    "app_guid": "app-guid-here"
+  },
+  "parameters": {
+  }
+}

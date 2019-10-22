@@ -1,0 +1,72 @@
+# Copyright (C) 2019 HERE Europe B.V.
+# Licensed under Apache 2.0, see full license in LICENSE
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      serviceAccountName: {{ template "fullname" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["start-broker.sh"]
+          env:
+          - name: brokerBasicAuthUsername
+            valueFrom:
+              secretKeyRef:
+                key:  brokerBasicAuthUsername
+                name: {{ template "fullname" . }}
+          - name: brokerBasicAuthPassword
+            valueFrom:
+              secretKeyRef:
+                key:  brokerBasicAuthPassword
+                name: {{ template "fullname" . }}
+          - name: hereTokenEndpointUrl
+            value: {{ .Values.env.hereTokenEndpointUrl | quote}}
+          - name: hereClientId
+            valueFrom:
+              secretKeyRef:
+                key:  hereClientId
+                name: {{ template "fullname" . }}
+          - name: hereAccessKeyId
+            valueFrom:
+              secretKeyRef:
+                key:  hereAccessKeyId
+                name: {{ template "fullname" . }}
+          - name: hereAccessKeySecret
+            valueFrom:
+              secretKeyRef:
+                key:  hereAccessKeySecret
+                name: {{ template "fullname" . }}
+          - name: hereHlsIntegrationServiceHostUrl
+            value: {{ .Values.env.hereHlsCoreIntegrationHost | quote}}
+          - name: hereAppId
+            value: {{ .Values.env.hereAppId | quote}}
+          - name: hereAppCode
+            value: {{ .Values.env.hereAppCode | quote}}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: app-conf-volume
+          secret:
+            secretName: {{ template "fullname" . }}

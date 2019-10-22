@@ -1,0 +1,200 @@
+.nh
+.TH HLS\-Service\-Broker (1) Container Image Pages
+HERE Technologies
+September 17, 2019
+
+.SH NAME
+.PP
+hls\-service\-broker \- HLS Service Broker container image
+
+
+.SH DESCRIPTION
+.PP
+The hls\-service\-broker image provides a containerized packaging of the HLS Service Broker.
+HERE Location Services (HLS) make it easy for developers to bring enterprise\-grade location intelligence to
+any applications on your platform. HLS power a number of use cases like Fleet Utilization,
+Supply Chain Optimization, Urban Mobility, etc. These services open new location intelligence
+opportunities in diverse industries like the Internet of Things, Automotive, Insurance, Advertising,
+Mobile Payments, Public Sector, Smart Cities, Telecom, Utilities, and Transportation and Logistics.
+HLS includes Geocoder, Search, HERE Location Services, Navigation, Routing, Fleet Telematics,
+Positioning and more which solve a range of problems like map visualization, navigation, routing,
+geocoding, time zone lookups, geofencing, custom locations, routing, route matching GPS traces, geospatial,
+sequencing multiple waypoints, truck routing, positioning, etc.
+
+
+.SH USAGE
+.SH Installation Prerequisites
+.SS Acquire HERE app credentials
+.PP
+To start using HLS Service Broker the cluster admin or service operator needs to register on HERE Developer Portal
+\[la]https://www.developer.here.com/\[ra] and acquire app credentials by following these steps.
+
+.RS
+.IP \(bu 2
+Sign Up using any of the plans available at Plans
+\[la]https://developer.here.com/plans\[ra] page.
+.IP \(bu 2
+Create a project
+.IP \(bu 2
+Generate an app for "REST \& XYZ HUB API"
+.IP \(bu 2
+Copy the APP ID \& APP CODE generated.
+
+.RE
+
+.SS OpenShift command line client
+.RS
+.IP \(bu 2
+Install the OpenShift command line client (oc) by following these
+\[la]https://docs.openshift.com/enterprise/3.1/cli_reference/get_started_cli.html#installing-the-cli\[ra] instructions.
+
+.RE
+
+.SH Installation
+.SS Deploy and register the broker
+.PP
+.RS
+
+.nf
+### Create a directory named hlssb
+mkdir hlssb
+
+### Change directory to hlssb
+cd hlssb
+
+### Fetch installation artifacts
+wget https://raw.githubusercontent.com/heremaps/here\-hls\-service\-broker/release\-v1.0.0/deploy/openshift/deployment.sh
+wget https://raw.githubusercontent.com/heremaps/here\-hls\-service\-broker/release\-v1.0.0/deploy/openshift/hls\-service\-broker.yaml
+wget https://raw.githubusercontent.com/heremaps/here\-hls\-service\-broker/release\-v1.0.0/deploy/openshift/parameters.env
+
+### Edit parameters.env and update the following parameters. Leave all other parameters as is.
+# 1. HERE App Id/App Code acquired from prerequisites step.
+# 2. Docker Image name
+# 3. If required change BASIC\_AUTH\_USERNAME and BASIC\_AUTH\_PASSWORD
+# 3. Highly recommend to change default BASIC\_AUTH\_USERNAME and BASIC\_AUTH\_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
+
+vi parameters.env
+
+### Change deployment.sh execute permission
+chmod +x deployment.sh
+
+### Execute the deployment script
+### By default the below script creates a project named hls\-sb. If this needs to be changed, modify the deployment.sh file
+./deployment.sh
+
+### check that the broker is running:
+oc get pods | grep hls\-service\-broker
+
+### check service broker logs
+oc logs $(oc get pods \-\-no\-headers \-o name | grep hls\-service\-broker)
+
+### Check if the broker service is up and running
+curl <broker\-url>/actuator/health
+
+
+.fi
+.RE
+
+.SH Provisioning \- Service Instance Creation
+.PP
+Once the deployment and registration steps are executed, the OpenShift Cluster Service Catalog will show the "HERE Location Services" as a catalog listing.
+To create a Service Instance for HERE Location Services, select the "HERE Location Services" listing and follow the instructions.
+
+.SH Binding \- Create credentials
+.PP
+Binding creation option is provided during the instance creation step which can be used to create the binding along with the instance creation.
+Alternately, binding can be created separately from the OpenShift Web UI as follows:
+
+.RS
+.IP \(bu 2
+Navigate to the project in which the instance has been created.
+.IP \(bu 2
+Navigate to the "Applications" menu and select "Provisioned Services".
+.IP \(bu 2
+Click on the "Create Binding" option and follow the instructions to create the binding.
+.IP \(bu 2
+Provide an optional binding name in the configuration step. This binding name will be used to name the app created at HERE end for the binding.
+.IP \(bu 2
+Once binding is done a Secret will be created which can be used to invoke the HLS APIs.
+
+.RE
+
+.SH Un\-binding \- Delete credentials
+.PP
+When the binding is no longer needed, it can be deleted from the same place it was created at.
+
+.SH Un\-provisioning \- Delete instance
+.PP
+When the HLS Service instance is no longer required, it can be deleted from the "Provisioned Services" under "Applications" menu.
+
+
+.SH ENVIRONMENT VARIABLES
+.PP
+Followings are the environment variables required to run the image container.
+
+.RS
+.IP \(bu 2
+\fBBasic Auth Credentials\fP: Basic auth credentials are used to enable auth security for the service broker available withing the image container.
+The basic auth credentials include these two parameters.
+
+.RE
+
+.PP
+\fB\fC\&.env
+brokerBasicAuthUsername=<provide\-\&username\-\&here>
+brokerBasicAuthPassword=<provide\-\&password\-\&here>
+\fR
+
+.RS
+.IP \(bu 2
+\fBHERE App Credentials\fP: HERE App Credentials include APP\_ID and APP\_CODE which can be acquired from HERE Developer Portal
+\[la]https://www.developer.here.com/\[ra]\&.
+These credentials are required for Broker API authentication in HERE ecosystem.
+Please note HERE App Credentials and HERE Client Credentials are mutually exclusive and provide what you get from HERE Developer Portal
+\[la]https://www.developer.here.com/\[ra]\&.
+The APP\_\&ID and APP\_\&CODE parameter names are as follows:
+
+.RE
+
+.PP
+\fB\fC\&.env
+hereAppId=<provide\-\&app\-\&id\-\&here>
+hereAppCode=<provide\-\&app\-\&code\-\&here>
+\fR
+
+.RS
+.IP \(bu 2
+\fBHERE Client Credentials\fP: HERE App Credentials include below parameters and can be acquired from HERE Developer Portal
+\[la]https://www.developer.here.com/\[ra]\&.
+These credentials are required for Broker API authentication in HERE ecosystem.
+Please note HERE App Credentials and HERE Client Credentials are mutually exclusive and provide what you get from HERE Developer Portal
+\[la]https://www.developer.here.com/\[ra]\&.
+
+.RE
+
+.PP
+\fB\fC\&.env
+hereTokenEndpointUrl=<provide\-\&token\-\&endpoint\-\&url\-\&here>
+hereClientId=<provide\-\&client\-\&id\-\&here>
+hereAccessKeyId=<provide\-\&access\-\&key\-\&id\-\&here>
+hereAccessKeySecret=<provide\-\&access\-\&key\-\&secret\-\&here>
+\fR
+.br
+* \fBHERE Integration Service URL\fP: This is the URL of the integration service the service broker interacts with in order to perform broker life\-cycle operations.
+The value of the parameter should be https://hls.integration.api.here.com.
+
+.PP
+\fB\fC\&.env
+hereHlsIntegrationServiceHostUrl=https://hls.integration.api.here.com
+\fR
+
+
+.SH HISTORY
+.PP
+v1.0.0
+
+
+.SH SECURITY IMPLICATIONS
+.PP
+Running this image container does not require any specific privileges. The image contains a service broker which should be registered
+with OpenShift Container Platform cluster (Service Catalog). This registration requires cluster admin privileges.

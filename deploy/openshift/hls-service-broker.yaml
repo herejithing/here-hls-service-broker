@@ -1,0 +1,253 @@
+# Copyright (C) 2019 HERE Europe B.V.
+# Licensed under Apache 2.0, see full license in LICENSE
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Template
+metadata:
+  name: hls-service-broker
+objects:
+
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: hls-service-broker-client
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: hls-service-broker
+    annotations:
+      kubernetes.io/service-account.name: hls-service-broker-client
+  type: kubernetes.io/service-account-token
+
+- apiVersion: servicecatalog.k8s.io/v1beta1
+  kind: ClusterServiceBroker
+  metadata:
+    name: hls-service-broker
+  spec:
+    url: ${BROKER_URL}
+    caBundle: ${BROKER_CA_CERT}
+    authInfo:
+      basic:
+        secretRef:
+          namespace: ${NAMESPACE}
+          name: hls-service-broker-credentials
+
+- kind: ServiceAccount
+  apiVersion: v1
+  metadata:
+    name: hls-service-broker
+
+- kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: hls-service-broker
+  rules:
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+
+- kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: access-hls-service-broker
+  rules:
+  - nonResourceURLs: ["/v2", "/v2/*"]
+    verbs: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+
+- kind: ClusterRoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: hls-service-broker
+  subjects:
+  - kind: ServiceAccount
+    name: hls-service-broker
+    namespace: ${NAMESPACE}
+  roleRef:
+    kind: ClusterRole
+    name: hls-service-broker
+
+- kind: ClusterRoleBinding
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: hls-service-broker-client
+  subjects:
+  - kind: ServiceAccount
+    name: hls-service-broker-client
+    namespace: ${NAMESPACE}
+  roleRef:
+    kind: ClusterRole
+    name: access-hls-service-broker
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: hls-service-broker
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: 'hls-service-broker-ssl'
+    labels:
+      app: hls-service-broker
+  spec:
+    selector:
+      app: hls-service-broker
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30087
+    type: NodePort
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: hls-service-broker-credentials
+    namespace: ${NAMESPACE}
+  type: Opaque
+  data:
+    username: ${BASIC_AUTH_USERNAME}
+    password: ${BASIC_AUTH_PASSWORD}
+
+- kind: Deployment
+  apiVersion: extensions/v1beta1
+  metadata:
+    name: hls-service-broker
+    labels:
+      app: hls-service-broker
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: hls-service-broker
+    template:
+      metadata:
+        labels:
+          app: hls-service-broker
+      spec:
+        serviceAccount: hls-service-broker
+        containers:
+        - name: service-hls-service-broker
+          image: ${IMAGE}
+          imagePullPolicy: ${IMAGEPULLPOLICY}
+          ports:
+          - containerPort: 3275
+          volumeMounts:
+          - mountPath: /var/run/hls-service-broker
+            name: hls-service-broker-ssl
+            readOnly: true
+          command: ["start-broker.sh"]
+          env:
+          - name: brokerBasicAuthUsername
+            valueFrom:
+              secretKeyRef:
+                name: hls-service-broker-credentials
+                key: username
+
+          - name: brokerBasicAuthPassword
+            valueFrom:
+              secretKeyRef:
+                name: hls-service-broker-credentials
+                key: password
+
+          - name: hereTokenEndpointUrl
+            value: ${HERE_TOKEN_ENDPOINT_URL}
+
+          - name: hereClientId
+            value: ${HERE_CLIENT_ID}
+
+          - name: hereAccessKeyId
+            value: ${HERE_ACCESS_KEY_ID}
+
+          - name: hereAccessKeySecret
+            value: ${HERE_ACCESS_KEY_SECRET}
+
+          - name: hereHlsIntegrationServiceHostUrl
+            value: ${HERE_HLS_INTEGRATION_SERVICE_URL}
+
+          - name: hereAppId
+            value: ${HERE_APP_ID}
+
+          - name: hereAppCode
+            value: ${HERE_APP_CODE}
+
+        volumes:
+        - name: hls-service-broker-ssl
+          secret:
+            defaultMode: 420
+            secretName: hls-service-broker-ssl
+            items:
+            - key: tls.crt
+              path: hlssb.crt
+            - key: tls.key
+              path: hlssb.key
+        imagePullSecrets:
+          - name: myregistrykey
+
+parameters:
+- description: Name of the image to use
+  displayName: Image name
+  name: IMAGE
+  required: true
+
+- description: Image pull policy
+  displayName: Image name
+  name: IMAGEPULLPOLICY
+  required: true
+
+- description: Namespace that the broker is deployed to
+  displayName: Namespace
+  name: NAMESPACE
+  required: true
+
+- description: base64 encoded SSL CA Certificate
+  displayName: base64 encoded SSL CA Certificate
+  name: BROKER_CA_CERT
+  required: true
+  value:
+
+- description: Broker URL for catalog registration
+  displayName: Broker Url
+  name: BROKER_URL
+  required: true
+
+- description: Username for broker basic authentication
+  displayName: Username
+  name: BASIC_AUTH_USERNAME
+  required: true
+
+- description: Password for broker basic authentication
+  displayName: Password
+  name: BASIC_AUTH_PASSWORD
+  required: true
+
+- description: Host Url for HERE Service
+  displayName: HlsIntegratioinHostUrl
+  name: HERE_HLS_INTEGRATION_SERVICE_URL
+  required: true
+
+- description: HERE Auth token endpoint
+  displayName: TokenEndpoint
+  name: HERE_TOKEN_ENDPOINT_URL
+
+- description: Client id for HERE Auth Credentials
+  displayName: HereClientId
+  name: HERE_CLIENT_ID
+
+- description: Access Key for HERE Auth Credentials
+  displayName: AccessKey
+  name: HERE_ACCESS_KEY_ID
+
+- description: Access Secret for HERE Auth Credentials
+  displayName: AccessSecret
+  name: HERE_ACCESS_KEY_SECRET
+
+- description: HERE App Id
+  displayName: AppId
+  name: HERE_APP_ID
+
+- description: HERE App Code
+  displayName: AppCode
+  name: HERE_APP_CODE

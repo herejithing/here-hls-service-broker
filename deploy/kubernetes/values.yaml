@@ -1,0 +1,58 @@
+# Copyright (C) 2019 HERE Europe B.V.
+# Licensed under Apache 2.0, see full license in LICENSE
+# SPDX-License-Identifier: Apache-2.0
+
+# Default values for gateway-service.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+deployClusterServiceBroker: true
+authenticate: true
+image:
+#Broker Image name and pull policy
+  repository: <image-url>
+  tag: latest
+  pullPolicy: Always
+service:
+  name: hls-broker-service
+  type: NodePort
+  externalPort: 80
+  internalPort: 8080
+
+env:
+  # Broker Deployment default Basic Auth Credentials. Required to register the broker with the service catalog
+  # Highly recommend to change these or use from secrets
+  brokerBasicAuthUsername: hlscloudadmin #Provide Username
+  brokerBasicAuthPassword: hlscloudsecret #Provide Password
+
+  # App Credentials - Please register on HERE Developer Portal (https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium), create a project and Generate
+  # a REST & XYZ HUB API/CLI app to get these.
+  hereAppId:
+  hereAppCode:
+
+  # Client Credentials - Please ignore now. For future usage.
+  hereTokenEndpointUrl:
+  hereClientId:
+  hereAccessKeyId:
+  hereAccessKeySecret:
+
+  # HERE Integration Serice URL - DO NOT CHANGE THIS
+  hereHlsCoreIntegrationHost: https://hls.integration.api.here.com
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUPercentage: 50
+  targetMemoryUtilizationPercentage: 70
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
