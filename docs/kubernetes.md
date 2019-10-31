@@ -6,11 +6,12 @@ High-level architecture diagram for the Service Broker on Kubernetes.
 ## Prerequisites
 
 ### HERE Developer Portal Steps
-To start using this Service Broker you will need to register on [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-ServiceBroker&create=Freemium-Basic&keepState=true&step=terms) and acquire app credentials by following these steps:
+To start using this Service Broker you will need to register on [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms) and acquire OAuth 2.0 credentials by following these steps:
 * Sign Up for a HERE Account on the [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms)
-* After signing-up and obtaining your HERE Account, create a new Project.
-* On the project details, in the REST & XYZ HUB API/CLI section, generate App ID and App Code.
-* Copy the App ID and App Code. 
+![HERE's Freemium Sign-Up](images/Developer_HERE_com_Sign_Up_720p.gif)
+* Go to the REST Section and generate an App.
+* Once the APP is generated, create an OAuth 2.0 (JSON Web Tokens) credentials under that and download the credentials file.
+![HERE's Freemium Sign-Up](images/Developer_HERE_com_API_Key_720.gif)
 
 ![HERE's Freemium Sign-Up](images/Freemium-Signup.gif)
 
@@ -19,7 +20,6 @@ To start using this Service Broker you will need to register on [HERE Developer 
 * [Install](https://docs.docker.com/install/) docker. Docker needs to be installed in the machine to build a docker image of the project. 
 * A docker registry (public or private) to push the broker image is required.
 * [Install](https://maven.apache.org/install.html) maven. Maven should be installed to build the broker project.
-
 
 ## Setup and Installation
 
@@ -69,7 +69,7 @@ curl <broker-url>/actuator/health
 
 ### Update the values.yaml
 Edit values.yaml and update the following parameters. Leave all other parameters as is.
-1. HERE App Id/App Code acquired from [prerequisites](/docs/installation-prerequisites.md) step.
+1. Update hereTokenEndpointUrl, hereClientId, hereAccessKeyId & hereAccessKeySecret env properties from the credentials file downloaded from the prerequisites step.
 2. Docker image repository. Change image.repository property.
 3. Highly recommend to change default brokerBasicAuthUsername and brokerBasicAuthPassword env properties. These credentials are required to register the broker with the Kubernetes Service Catalog.
 

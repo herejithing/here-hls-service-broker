@@ -101,7 +101,7 @@ public class HlsInstanceBindingService implements ServiceInstanceBindingService 
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while creating service binding with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while creating service binding with id %s for instance %s for HLS Service Broker",request.getBindingId(),request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while creating service binding with id %s for instance %s",request.getBindingId(),request.getServiceInstanceId()));
         }
     }
 
@@ -128,7 +128,7 @@ public class HlsInstanceBindingService implements ServiceInstanceBindingService 
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while deleting service binding with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while deleting service binding with id %s for instance %s for HLS Service Broker",request.getBindingId(),request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while deleting service binding with id %s for instance %s",request.getBindingId(),request.getServiceInstanceId()));
         }
     }
 
@@ -151,7 +151,7 @@ public class HlsInstanceBindingService implements ServiceInstanceBindingService 
         }
         catch (Exception e) {
             log.error("Exception while getting service binding with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while getting service binding with id %s for instance %s for HLS Service Broker",request.getBindingId(),request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while getting service binding with id %s for instance %s",request.getBindingId(),request.getServiceInstanceId()));
         }
     }
 

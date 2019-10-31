@@ -93,7 +93,7 @@ public class HlsCatalogService implements CatalogService {
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while retrieving catalog:", e);
-            throw new ServiceBrokerException("There was an error while fetching service catalog for HLS Service Broker");
+            throw new ServiceBrokerException("There was an error while fetching service catalog");
         }
     }
 
@@ -115,7 +115,7 @@ public class HlsCatalogService implements CatalogService {
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while retrieving service definition with id: {} :", serviceId, e);
-            throw new ServiceBrokerException(String.format("There was an error while fetching service definition with id %s for HLS Service Broker",serviceId));
+            throw new ServiceBrokerException(String.format("There was an error while fetching service definition with id %s",serviceId));
         }
     }
 }

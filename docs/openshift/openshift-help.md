@@ -22,9 +22,9 @@ sequencing multiple waypoints, truck routing, positioning, etc.
 ## Installation Prerequisites
 
 ### Acquire HERE app credentials
-To start using HLS Service Broker the cluster admin or service operator needs to register on [HERE Developer Portal](https://www.developer.here.com/) and acquire app credentials by following these steps.
+To start using HLS Service Broker the cluster admin or service operator needs to register on [HERE Developer Portal](https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium) and acquire app credentials by following these steps.
 
-* Sign Up using any of the plans available at [Plans](https://developer.here.com/plans) page.
+* Sign Up using any of the plans available at [Plans](https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium) page.
 * Create a project
 * Generate an app for "REST & XYZ HUB API"
 * Copy the APP ID & APP CODE generated.
@@ -44,16 +44,13 @@ mkdir hlssb
 cd hlssb
 
 ### Fetch installation artifacts
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/release-v1.0.0/deploy/openshift/deployment.sh
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/release-v1.0.0/deploy/openshift/hls-service-broker.yaml
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/release-v1.0.0/deploy/openshift/parameters.env
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/deployment.sh
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/hls-service-broker.yaml
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/parameters.env
 
 ### Edit parameters.env and update the following parameters. Leave all other parameters as is.
-# 1. HERE App Id/App Code acquired from prerequisites step.
-# 2. Docker Image name
-# 3. If required change BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD
-# 3. Highly recommend to change default BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
-
+# 1. HERE_TOKEN_ENDPOINT_URL, HERE_CLIENT_ID, HERE_ACCESS_KEY_ID & HERE_ACCESS_KEY_SECRET from the credentials file downloaded from the prerequisites step.
+# 2. Highly recommend to change default BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
 vi parameters.env
 
 ### Change deployment.sh execute permission
@@ -105,24 +102,8 @@ brokerBasicAuthUsername=<provide-username-here>
 brokerBasicAuthPassword=<provide-password-here>
 ```     
 
-* **HERE App Credentials**: HERE App Credentials include APP_ID and APP_CODE which can be acquired from [HERE Developer Portal](https://www.developer.here.com/).
-These credentials are required for Broker API authentication in HERE ecosystem.
-The APP_ID and APP_CODE parameter names are as follows:
-
-```.env
-hereAppId=<provide-app-id-here>
-hereAppCode=<provide-app-code-here>
-```  
-
-* **HERE Integration Service URL**: This is the URL of the integration service the service broker interacts with in order to perform broker life-cycle operations.
-The value of the parameter should be https://hls.integration.api.here.com.
-
-```.env
-hereHlsIntegrationServiceHostUrl=https://hls.integration.api.here.com
-```  
-
-* **HERE Client Credentials (for future usage)** : HERE App Credentials include below parameters and can be acquired from [HERE Developer Portal](https://www.developer.here.com/).
-These credentials are required for Broker API authentication in HERE ecosystem.
+* **HERE OAuth 2.0 (JSON Web Tokens) Credentials** : HERE OAuth 2.0 Credentials include below parameters and can be acquired from [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms).
+These credentials are required for Broker API authentication in HERE ecosystem. This is the recommended way of authentication.
 Please ignore these params for now. They will be used in future.
 
 ```.env
@@ -132,8 +113,29 @@ hereAccessKeyId=<provide-access-key-id-here>
 hereAccessKeySecret=<provide-access-key-secret-here>
 ```  
 
+* **HERE App Credentials**: HERE App Credentials include APP_ID and APP_CODE and is an old way of authentication. If you already have APP_ID and APP_ID, the same can be retrieved from [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms).
+These credentials are required for Broker API authentication in HERE ecosystem. We highly recommend to switch to a more secure OAuth 2.0 (JSON Web Tokens) based credentials. 
+The APP_ID and APP_CODE parameter names are as follows:
+
+```.env
+hereAppId=<provide-app-id-here>
+hereAppCode=<provide-app-code-here>
+```  
+* **HERE Integration Service URL**: This is the URL of the integration service the service broker interacts with in order to perform broker life-cycle operations.
+The value of the parameter should be https://hls.integration.api.here.com.
+
+```.env
+hereHlsIntegrationServiceHostUrl=https://hls.integration.api.here.com
+```  
+
+
 # HISTORY
-v1.0.0
+v1.0.5 - Deployment guidelines changes
+v1.0.4 - First generally available broker container image version
+v1.0.3 - Submitted for container review
+v1.0.2 - Submitted for container review
+v1.0.1 - Submitted for container review
+v1.0.0 - Submitted for container review
 
 # SECURITY IMPLICATIONS
 Running this image container does not require any specific privileges. The image contains a service broker which should be registered 

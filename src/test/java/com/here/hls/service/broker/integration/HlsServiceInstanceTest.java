@@ -78,7 +78,7 @@ class HlsServiceInstanceTest {
                 .content(HlsFileUtils.readClassPathFileAsString("/integration/instanceCreationRequest.json"))
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while creating service instance with id instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while creating service instance with id instance1\"}",result.getResponse().getContentAsString());
     }
 
     static void createInstanceTest404Exception(RestTemplate restTemplate,MockMvc mockMvc) throws Exception {
@@ -124,12 +124,12 @@ class HlsServiceInstanceTest {
         mockServiceDefinition(restTemplate);
         BDDMockito.when(restTemplate.exchange(ArgumentMatchers.contains("/integration/api/v1/service/instance"), ArgumentMatchers.eq(HttpMethod.GET),
                 ArgumentMatchers.any(),ArgumentMatchers.<Class<?>>any(),ArgumentMatchers.eq("instance1")))
-                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"There was an error while getting service instance for HLS Service Broker.",("{\"code\":\"30404\",\"error\":\"There was an error while getting service instance for HLS Service Broker\",\"timestamp\":\"2019-07-19 16:07\"}").getBytes(),null));
+                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"There was an error while getting service instance.",("{\"code\":\"30404\",\"error\":\"There was an error while getting service instance\",\"timestamp\":\"2019-07-19 16:07\"}").getBytes(),null));
         MvcResult result =  mockMvc.perform(MockMvcRequestBuilders
                 .get("/v2/service_instances/{instanceId}","instance1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"error\":\"30404\",\"description\":\"There was an error while getting service instance for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"error\":\"30404\",\"description\":\"There was an error while getting service instance\"}",result.getResponse().getContentAsString());
     }
     static void getInstanceTest404Exception(RestTemplate restTemplate,MockMvc mockMvc) throws Exception {
         mockServiceDefinition(restTemplate);
@@ -151,7 +151,7 @@ class HlsServiceInstanceTest {
                 .get("/v2/service_instances/{instanceId}","instance1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while retrieving service instance with id instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while retrieving service instance with id instance1\"}",result.getResponse().getContentAsString());
     }
 
     static void createInstanceTestDefinitionException(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
@@ -167,7 +167,7 @@ class HlsServiceInstanceTest {
                 .content(HlsFileUtils.readClassPathFileAsString("/integration/instanceCreationRequest.json"))
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while fetching service definition with id hls-service-id1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while fetching service definition with id hls-service-id1\"}",result.getResponse().getContentAsString());
     }
 
     static void updateInstanceTest(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
@@ -223,7 +223,7 @@ class HlsServiceInstanceTest {
                 .content(HlsFileUtils.readClassPathFileAsString("/integration/instanceCreationRequest.json"))
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while updating service instance with id instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while updating service instance with id instance1\"}",result.getResponse().getContentAsString());
     }
 
     static void updateInstanceWithoutUserTokenTest(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
@@ -291,7 +291,7 @@ class HlsServiceInstanceTest {
                 .param("plan_id","hls-plan-id1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while deleting service instance with id instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while deleting service instance with id instance1\"}",result.getResponse().getContentAsString());
     }
 
     private static ServiceInstanceResponse serviceInstanceResponse(){

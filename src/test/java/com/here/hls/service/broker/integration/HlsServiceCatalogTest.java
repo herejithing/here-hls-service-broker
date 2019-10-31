@@ -65,7 +65,7 @@ class HlsServiceCatalogTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/v2/catalog"))
                 .andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while fetching service catalog for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while fetching service catalog\"}",result.getResponse().getContentAsString());
     }
 
     static void getCatalogTestHttpClientErrorException(RestTemplate restTemplate,MockMvc mockMvc) throws Exception {
@@ -75,7 +75,7 @@ class HlsServiceCatalogTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/v2/catalog"))
                 .andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while fetching service catalog for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while fetching service catalog\"}",result.getResponse().getContentAsString());
     }
 
     static void getCatalogTest404Exception(RestTemplate restTemplate,MockMvc mockMvc) throws Exception {

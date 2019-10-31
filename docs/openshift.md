@@ -6,57 +6,31 @@ High-level architecture diagram for the Service Broker on Red Hat OpenShift.
 ## Prerequisites
 
 ### HERE Developer Portal Steps
-To start using this Service Broker you will need to register on [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-ServiceBroker&create=Freemium-Basic&keepState=true&step=terms) and acquire app credentials by following these steps:
+To start using this Service Broker you will need to register on [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms) and acquire OAuth 2.0 credentials by following these steps:
 * Sign Up for a HERE Account on the [HERE Developer Portal](https://developer.here.com/sign-up?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium-Basic&keepState=true&step=terms)
-* After signing-up and obtaining your HERE Account, create a new Project.
-* On the project details, in the REST & XYZ HUB API/CLI section, generate App ID and App Code.
-* Copy the App ID and App Code. 
-
-![HERE's Freemium Sign-Up](images/Freemium-Signup.gif)
+![HERE's Freemium Sign-Up](images/Developer_HERE_com_Sign_Up_720p.gif)
+* Go to the REST Section and generate an App.
+* Once the APP is generated, create an OAuth 2.0 (JSON Web Tokens) credentials under that and download the credentials file.
+![HERE's Freemium Sign-Up](images/Developer_HERE_com_API_Key_720.gif)
 
 ### Red Hat OpenShift Installation Prerequisites
-* [Install](https://docs.docker.com/install/) Docker. Docker needs to be installed in the machine to build a docker image of the project. 
-* A Docker registry (public or private) to push the broker image is required.
-* [Install](https://maven.apache.org/install.html) maven. Maven should be installed to build the broker project.
 * [Install](https://docs.openshift.com/enterprise/3.1/cli_reference/get_started_cli.html#installing-the-cli) the OpenShift command line client (oc).
 
 ## Installation
 
-### Checkout and build the GitHub project
 ```bash
-### Clone the git repository
-git clone https://github.com/heremaps/here-hls-service-broker.git
+### Create a directory to fetch the installation artefacts
+mkdir hlssb
+cd hlssb
 
-### Navigate to hls-service-broker directory.
-cd here-hls-service-broker
-
-### Build the project
-mvn clean package
-```
-
-### Build and Push Docker Image
-```bash
-### Build a docker image
-docker build -t hls-service-broker .
-
-### Tag the image just created. Replace image-id, docker-repository and tag with correct values
-docker tag <image-id> <docker-repository>/hls-service-broker:<tag>
-
-### Push the docker image to the registry. Replace docker-repository and tag with correct values
-docker push <docker-repository>/hls-service-broker:<tag>
-```
-
-### Deploy and register the broker
-
-```bash
-### Navigate to the OpenShift deployment directory
-cd deploy/openshift
+### Fetch installation artefacts
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/deployment.sh
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/hls-service-broker.yaml
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.0/deploy/openshift/parameters.env
 
 ### Edit parameters.env and update the following parameters. Leave all other parameters as is.
-# 1. HERE App Id/App Code acquired from prerequisites step.
-# 2. Docker Image name
-# 3. If required change BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD
-# 3. Highly recommend to change default BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
+# 1. HERE_TOKEN_ENDPOINT_URL, HERE_CLIENT_ID, HERE_ACCESS_KEY_ID & HERE_ACCESS_KEY_SECRET from the credentials file downloaded from the prerequisites step.
+# 2. Highly recommend to change default BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
 vi parameters.env
 
 ### Change deployment.sh execute permission

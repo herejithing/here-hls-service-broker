@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A utility class for RestTemplate to invoke REST API calls required for HLS Service Broker
+ * A utility class for RestTemplate to invoke REST API calls required for the service broker
  */
 @Component
 public class HLSBrokerRestTemplate {

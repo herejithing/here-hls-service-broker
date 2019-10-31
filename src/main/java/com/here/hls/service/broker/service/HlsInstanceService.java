@@ -102,7 +102,7 @@ public class HlsInstanceService implements ServiceInstanceService {
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while creating service instance with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while creating service instance with id %s for HLS Service Broker",request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while creating service instance with id %s",request.getServiceInstanceId()));
         }
     }
 
@@ -126,7 +126,7 @@ public class HlsInstanceService implements ServiceInstanceService {
             throw new ServiceBrokerException(hisError.getErrorCode(),hisError.getErrorMessage());
         }catch (Exception e) {
             log.error("Exception while updating service instance with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while updating service instance with id %s for HLS Service Broker",request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while updating service instance with id %s",request.getServiceInstanceId()));
         }
     }
 
@@ -154,7 +154,7 @@ public class HlsInstanceService implements ServiceInstanceService {
         }
         catch (Exception e) {
             log.error("Exception while deleting service instance with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while deleting service instance with id %s for HLS Service Broker",request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while deleting service instance with id %s",request.getServiceInstanceId()));
         }
     }
 
@@ -180,7 +180,7 @@ public class HlsInstanceService implements ServiceInstanceService {
         }
         catch (Exception e) {
             log.error("Exception while creating service instance with instanceId {} ", request.getServiceInstanceId(), e);
-            throw new ServiceBrokerException(String.format("There was an error while retrieving service instance with id %s for HLS Service Broker",request.getServiceInstanceId()));
+            throw new ServiceBrokerException(String.format("There was an error while retrieving service instance with id %s",request.getServiceInstanceId()));
         }
     }
 

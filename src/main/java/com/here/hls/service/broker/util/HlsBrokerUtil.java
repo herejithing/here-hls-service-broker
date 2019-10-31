@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Utility class for HLS Service Broker
+ * Utility class for the broker
  */
 @Component
 public class HlsBrokerUtil {

@@ -24,16 +24,17 @@ env:
   brokerBasicAuthUsername: hlscloudadmin #Provide Username
   brokerBasicAuthPassword: hlscloudsecret #Provide Password
 
-  # App Credentials - Please register on HERE Developer Portal (https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium), create a project and Generate
-  # a REST & XYZ HUB API/CLI app to get these.
-  hereAppId:
-  hereAppCode:
-
-  # Client Credentials - Please ignore now. For future usage.
+  # HERE App Credentials - Get yours from https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium
+  # Note: Either Oauth2 or App Credentials are requried. Please provide what you get from HERE Developer Portal
   hereTokenEndpointUrl:
   hereClientId:
   hereAccessKeyId:
   hereAccessKeySecret:
+
+  # HERE Oauth2 Credentials - Get yours from https://developer.here.com/plans?utm_medium=referral&utm_source=GitHub-Service-Broker&create=Freemium
+  # Note: Either Oauth2 or App Credentials are requried. Please provide what you get from HERE Developer Portal
+  hereAppId:
+  hereAppCode:
 
   # HERE Integration Serice URL - DO NOT CHANGE THIS
   hereHlsCoreIntegrationHost: https://hls.integration.api.here.com

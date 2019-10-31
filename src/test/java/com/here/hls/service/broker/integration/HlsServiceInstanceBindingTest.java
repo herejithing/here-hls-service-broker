@@ -80,7 +80,7 @@ class HlsServiceInstanceBindingTest {
                 .content(HlsFileUtils.readClassPathFileAsString("/integration/bindingCreationRequest.json"))
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while creating service binding with id binding1 for instance instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while creating service binding with id binding1 for instance instance1\"}",result.getResponse().getContentAsString());
     }
 
     static void getInstanceBindingTest(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
@@ -104,18 +104,18 @@ class HlsServiceInstanceBindingTest {
                 .get("/v2/service_instances/{instanceId}/service_bindings/{bindingId}","instance1","binding1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while getting service binding with id binding1 for instance instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while getting service binding with id binding1 for instance instance1\"}",result.getResponse().getContentAsString());
     }
     static void getInstanceBindingHttpClientErrorTest(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
         mockServiceDefinition(restTemplate);
         BDDMockito.when(restTemplate.exchange(ArgumentMatchers.contains("/integration/api/v1/service/instance/{instanceId}/binding"), ArgumentMatchers.eq(HttpMethod.GET),
                 ArgumentMatchers.any(),ArgumentMatchers.<Class<?>>any(),ArgumentMatchers.eq("instance1"),ArgumentMatchers.eq("binding1")))
-                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"Service Binding not found.",("{\"code\":\"40404\",\"error\":\"There was an error while getting service instance for HLS Service Broker\",\"timestamp\":\"2019-07-19 16:07\"}").getBytes(),null));
+                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"Service Binding not found.",("{\"code\":\"40404\",\"error\":\"There was an error while getting service instance\",\"timestamp\":\"2019-07-19 16:07\"}").getBytes(),null));
         MvcResult result =  mockMvc.perform(MockMvcRequestBuilders
                 .get("/v2/service_instances/{instanceId}/service_bindings/{bindingId}","instance1","binding1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"error\":\"40404\",\"description\":\"There was an error while getting service instance for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"error\":\"40404\",\"description\":\"There was an error while getting service instance\"}",result.getResponse().getContentAsString());
     }
     static void getInstanceBindingTest404Exception(RestTemplate restTemplate,MockMvc mockMvc) throws Exception {
         mockServiceDefinition(restTemplate);
@@ -154,7 +154,7 @@ class HlsServiceInstanceBindingTest {
                 .param("plan_id","hls-plan-id1")
         ).andReturn();
         Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(),result.getResponse().getStatus());
-        Assert.assertEquals("{\"description\":\"There was an error while deleting service binding with id binding1 for instance instance1 for HLS Service Broker\"}",result.getResponse().getContentAsString());
+        Assert.assertEquals("{\"description\":\"There was an error while deleting service binding with id binding1 for instance instance1\"}",result.getResponse().getContentAsString());
     }
     static void deleteInstanceBindingHttpClientErrorTest(RestTemplate restTemplate, MockMvc mockMvc) throws Exception {
         mockServiceDefinition(restTemplate);
