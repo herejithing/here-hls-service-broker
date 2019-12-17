@@ -32,9 +32,7 @@ Service Broker for HERE Location Services is an implementation of the [Open Serv
 The following guides make it easy for you to install the Service Broker. To proceed, choose the target platform for the installation:
   * [OpenShift](/docs/openshift.md)
   * [Kubernetes](/docs/kubernetes.md)
-
-## Learn More
-* [Step by step Service Broker installation on OpenShift][youtube-here-osb]
+  
 
 # License
 
