@@ -44,9 +44,9 @@ mkdir hlssb
 cd hlssb
 
 ### Fetch installation artifacts
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.1/deploy/openshift/deployment.sh
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.1/deploy/openshift/hls-service-broker.yaml
-wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.1/deploy/openshift/parameters.env
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.2/deploy/openshift/deployment.sh
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.2/deploy/openshift/hls-service-broker.yaml
+wget https://raw.githubusercontent.com/heremaps/here-hls-service-broker/v1.0.2/deploy/openshift/parameters.env
 
 ### Edit parameters.env and update the following parameters. Leave all other parameters as is.
 # 1. HERE_TOKEN_ENDPOINT_URL, HERE_CLIENT_ID, HERE_ACCESS_KEY_ID & HERE_ACCESS_KEY_SECRET from the credentials file downloaded from the prerequisites step.
