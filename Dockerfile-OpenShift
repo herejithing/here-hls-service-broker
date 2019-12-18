@@ -1,3 +1,15 @@
+# Stage to clone the repository from github
+FROM alpine/git AS clone
+WORKDIR /app
+RUN git clone https://github.com/heremaps/here-hls-service-broker.git
+
+# Stage to build the project
+FROM maven:3.5-jdk-8-alpine AS build
+WORKDIR /app
+COPY --from=clone /app/here-hls-service-broker /app
+RUN mvn clean package
+
+# Final stage to build the broker image
 # Pull the ubi image
 FROM registry.redhat.io/ubi7/ubi:7.7-140
 
@@ -22,25 +34,25 @@ ENV JAVA_HOME /etc/alternatives/jre
 VOLUME /tmp
 
 # Point DEPENDENCY to target/dependency where the fat jar is unpacked
-ARG DEPENDENCY=target/dependency
+ARG DEPENDENCY=/app/target/dependency
 
 # Copy the dependency jars
-COPY ${DEPENDENCY}/BOOT-INF/lib /broker/lib
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /broker/lib
 
 # Copy the META-INF directory
-COPY ${DEPENDENCY}/META-INF /broker/META-INF
+COPY --from=build ${DEPENDENCY}/META-INF /broker/META-INF
 
 # Copy the class files of the project
-COPY ${DEPENDENCY}/BOOT-INF/classes /broker
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /broker
 
 # Copy the startup script
-COPY script/start-broker.sh /usr/local/bin/start-broker.sh
+COPY --from=build /app/script/start-broker.sh /usr/local/bin/start-broker.sh
 
 # Copy the .help.1 makefile
-COPY docs/openshift/help.1 /help.1
+COPY --from=build /app/docs/openshift/help.1 /help.1
 
 # Copy the LICENSE file
-COPY LICENSE /licenses/LICENSE.txt
+COPY --from=build /app/LICENSE /licenses/LICENSE.txt
 
 # Assign execute permissions to the startup script
 RUN chmod +x /usr/local/bin/start-broker.sh
