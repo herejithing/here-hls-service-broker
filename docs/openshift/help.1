@@ -70,6 +70,7 @@ wget https://raw.githubusercontent.com/heremaps/here\-hls\-service\-broker/v1.0.
 ### Edit parameters.env and update the following parameters. Leave all other parameters as is.
 # 1. HERE\_TOKEN\_ENDPOINT\_URL, HERE\_CLIENT\_ID, HERE\_ACCESS\_KEY\_ID \& HERE\_ACCESS\_KEY\_SECRET from the credentials file downloaded from the prerequisites step.
 # 2. Highly recommend to change default BASIC\_AUTH\_USERNAME and BASIC\_AUTH\_PASSWORD properties. These credentials are required to register the broker with the OpenShift container catalog.
+# 3. Update IMAGEPULLSECRETS parameter to pull the image container from Red Hat image registry
 vi parameters.env
 
 ### Change deployment.sh execute permission

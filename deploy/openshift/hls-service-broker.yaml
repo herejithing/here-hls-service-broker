@@ -184,7 +184,7 @@ objects:
             - key: tls.key
               path: hlssb.key
         imagePullSecrets:
-          - name: myregistrykey
+          - name: ${IMAGEPULLSECRETS}
 
 parameters:
 - description: Name of the image to use
@@ -195,6 +195,11 @@ parameters:
 - description: Image pull policy
   displayName: Image name
   name: IMAGEPULLPOLICY
+  required: true
+
+- description: Image pull secrets
+  displayName: Image pull secrets
+  name: IMAGEPULLSECRETS
   required: true
 
 - description: Namespace that the broker is deployed to
