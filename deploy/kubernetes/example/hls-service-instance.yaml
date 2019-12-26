@@ -11,4 +11,4 @@ metadata:
   namespace: marketplace
 spec:
   clusterServiceClassExternalName: here-service-broker
-  clusterServicePlanExternalName: Freemium-XYZ
+  clusterServicePlanExternalName: Freemium
